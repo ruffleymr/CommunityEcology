@@ -45,7 +45,7 @@ setwd("/mnt/lfs2/ruff6699/ComPhy_Sep21")
 #Create Matrices to hold all parameters simulated under, and the summary stats from those simulations
 
 keep.tip <- function(tree,tip) drop.tip(tree,setdiff(tree$tip.label,tip))
-sims <- 10000
+sims <- 10
 
 #sink(file=paste(paste(getwd(),"/GenRefTable_OU_BM_ABC_4262017.Rout",sep="")))
 par.sim <- matrix(NA, sims, 9)
@@ -63,8 +63,8 @@ for (i in 1:nrow(par.sim)){
 	mu <- eps*lambda
 	frac <- runif(1,0.3,0.8)
 	age <- as.integer(runif(1,80,120))
-	par <- runif(1,0,2.0)
-	sig2 <- runif(1,0,2.0)
+	par <- runif(1,0,5.0)
+	sig2 <- runif(1,0,5.0)
 	tau <- sig2
 	alpha <- runif(1,0.1,4.0)
 	tree <- sim.bd.taxa.age(n, numbsim, lambda, mu, frac=frac, age, mrca = FALSE)[[1]]
@@ -175,7 +175,10 @@ for (i in 1:nrow(par.sim)){
 	######################################################################################################################
 	if (u == 3){ ##limited similarity
 		print(3)
+		#par <- runif(1,0,5.0)
 		x <- sim.char(tree, par, nsim=1,model="BM", root=0)[,,1] 
+		#hist(x, col="blue", breaks=10)
+		alph<- abs(range(x)[1]-range(x)[2])/2
 		limx <- c()
 		Xi <- sample(x,1)
 		limx <- c(Xi)
@@ -186,7 +189,7 @@ for (i in 1:nrow(par.sim)){
 			Xj <- sample(x,1)
 			Probabilities <- rep(NA, length(limx))
 			for (z in 1:length(limx)){
-				Probabilities[z] <- (1 - exp(-(((limx[z]-Xj)^2)/(50*tau))))
+				Probabilities[z] <- (1 - exp(-(((limx[z]-Xj)^2)/(alph*tau))))
 			}
 			Pj <- mean(Probabilities)
 			if (Pj > runif(1,0,1)) {
@@ -194,9 +197,17 @@ for (i in 1:nrow(par.sim)){
 				x <- x[!x==Xj]
 				#acc <- acc +1
 			}else{
+				#x <- x[!x==Xj]
 				#rej <- rej +1
 			}	
 		}
+		#par
+		#alph
+		#acc/sum(acc,rej)
+		#rej/sum(acc,rej)
+		#par(new=T)
+		#hist(limx, col="gray", xlim=c(-8,4), ylim=c(0,60))
+		
 		limsim.tree <- keep.tip(tree, names(limx))
 		xtips <- limx
 		sts <- spectR(limsim.tree)	
@@ -335,7 +346,10 @@ for (i in 1:nrow(par.sim)){
 	######################################################################################################################
 	if (u == 6){ ##limited similarity OU
 		print(6)
-		x <- fastBM(tree, a=0,theta=0, alpha=alpha, sig2=sig2, internal=FALSE)
+		#par <- runif(1,0,5.0)
+		x <- fastBM(tree, a=0,theta=0, alpha=alpha, sig2=par, internal=FALSE)
+		#hist(x, col="blue", breaks=10)
+		alph<- abs(range(x)[1]-range(x)[2])/2
 		limx <- c()
 		Xi <- sample(x,1)
 		limx <- c(Xi)
@@ -346,7 +360,7 @@ for (i in 1:nrow(par.sim)){
 			Xj <- sample(x,1)
 			Probabilities <- rep(NA, length(limx))
 			for (z in 1:length(limx)){
-				Probabilities[z] <- (1 - exp(-(((limx[z]-Xj)^2)/(50*tau))))
+				Probabilities[z] <- (1 - exp(-(((limx[z]-Xj)^2)/(alph*tau))))
 			}
 			Pj <- mean(Probabilities)
 			if (Pj > runif(1,0,1)) {
@@ -354,9 +368,17 @@ for (i in 1:nrow(par.sim)){
 				x <- x[!x==Xj]
 				#acc <- acc +1
 			}else{
+				#x <- x[!x==Xj]
 				#rej <- rej +1
 			}	
 		}
+		#par
+		#alph
+		#acc/sum(acc,rej)
+		#rej/sum(acc,rej)
+		#par(new=T)
+		#hist(limx, col="gray", xlim=c(-1,.5), ylim=c(0,50))
+		
 		limsim.tree <- keep.tip(tree, names(limx))
 		xtips <- limx
 		sts <- spectR(limsim.tree)	
