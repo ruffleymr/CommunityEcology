@@ -1,2 +1,2 @@
 # CommunityEcology
-# The script 'ReferenceDatset_NewComEx_28Sept.Rd' generates a reference dataset for abc analysis. The reference dataset simulates 6 models. Each model represents a model of trait evolution, either Brownian Motion or Ornstein-Uhlenbeck, and a model of community assembly, either Neutral, habitat filtering, or competitive exclusion.
+# To simulate data under community assembly models and then perform model selection use the below scripts. The scripts can simulate regional phylogenetic trees and then be used to simulate 6 community assembly models, using those regional trees. BM = Brownian Motion and Ornstein-Uhlenbeck. neut = neutral, hf=habitat filtering, and ce = competitive exclusion. 
